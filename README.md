@@ -13,12 +13,9 @@ loss = (sigma * error ^ 2)/n
 
 Example:
   Input:
-    x1: 1
-    y1: 2
-    x2: 2
-    y2: 4
-    x3: 3
-    y3: 6
+    (1, 2),
+    (2, 4),
+    (3, 6)
   Output:
     Prediction = 2 * input + 0
 
