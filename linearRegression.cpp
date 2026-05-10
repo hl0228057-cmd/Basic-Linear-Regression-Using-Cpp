@@ -5,13 +5,18 @@ using namespace std;
 
 int main() {
     // data
-    int dataLength;
-    cout << "number of data points: "; cin >> dataLength;
+    int dataLength = 0;
+    while (dataLength < 2) {
+        cout << "number of data points: ";
+        cin >> dataLength;
+    }
 
-    vector<int> inputs (dataLength);
-    vector<int> expectedOutputs (dataLength);
+    const int n = dataLength;
 
-    for (int i = 0; i < dataLength; i++) {
+    vector<int> inputs (n);
+    vector<int> expectedOutputs (n);
+
+    for (int i = 0; i < n; i++) {
         cout << "x" << i+1 << ": "; cin >> inputs[i];
         cout << "y" << i+1 << ": "; cin >> expectedOutputs[i];
     }
@@ -24,30 +29,20 @@ int main() {
     int iterations = 3e+4;
     double learningRate = 1e-2;
 
-    double prevLoss;
     double currentLoss;
 
 
 
     // initial loss
-    vector<double> errors;
     double total = 0;
 
-    for (int j = 0; j < inputs.size(); j++) {
-
-        // prediction = weight * input + bias
+    for (int j = 0; j < n; j++) {
         double pred = weight * inputs[j] + bias;
-
-        // error = actual - prediction
         double error = expectedOutputs[j] - pred;
-        errors.push_back(error);
+        total += error * error;
     }
 
-    // loss = ∑(error^2)/n
-    for (double error : errors) {
-    total += error * error;
-    }
-    currentLoss = total / inputs.size();
+    currentLoss = total / n;
 
 
 
@@ -55,35 +50,24 @@ int main() {
     for (int i = 0; i < iterations; i++) {
         if (currentLoss < 1e-6) break;
 
-        vector<double> errors;
         double total = 0;
 
         double biasChange = 0, weightChange = 0;
 
-        for (int j = 0; j < inputs.size(); j++) {
-            // prediction = weight * input + bias
+        for (int j = 0; j < n; j++) {
             double pred = weight * inputs[j] + bias;
-
-            // error = actual - prediction
             double error = expectedOutputs[j] - pred;
-            errors.push_back(error);
 
-            // bias and weight change
+            total += error * error;
             biasChange += error;
             weightChange += error * inputs[j];
         }
 
-        prevLoss = currentLoss;
-
-        // loss = ∑(error^2)/n
-        for (double error : errors) {
-            total += error * error;
-        }
-        currentLoss = total / inputs.size();
+        currentLoss = total / n;
 
         // adjust weights and bias
-        biasChange /= inputs.size();
-        weightChange /= inputs.size();
+        biasChange /= n;
+        weightChange /= n;
 
         bias += learningRate * biasChange;
         weight += learningRate * weightChange;
@@ -93,7 +77,7 @@ int main() {
     }
 
     // y = mx + b
-    cout << "Prediction = " << round(weight * 100.0) / 100.0 << " * input + " << round(bias * 100.0) / 100.0;
+    cout << "y = " << round(weight * 100.0) / 100.0 << "x + " << round(bias * 100.0) / 100.0;
 
     return 0;
 }
