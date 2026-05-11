@@ -13,8 +13,8 @@ int main() {
 
     const int n = dataLength;
 
-    vector<int> inputs (n);
-    vector<int> expectedOutputs (n);
+    vector<double> inputs (n);
+    vector<double> expectedOutputs (n);
 
     for (int i = 0; i < n; i++) {
         cout << "x" << i+1 << ": "; cin >> inputs[i];
@@ -42,7 +42,7 @@ int main() {
         total += error * error;
     }
 
-    currentLoss = total / n;
+    currentLoss = total / (2 * n);
 
 
 
@@ -56,21 +56,21 @@ int main() {
 
         for (int j = 0; j < n; j++) {
             double pred = weight * inputs[j] + bias;
-            double error = expectedOutputs[j] - pred;
+            double error = pred - expectedOutputs[j];
 
             total += error * error;
             biasChange += error;
             weightChange += error * inputs[j];
         }
 
-        currentLoss = total / n;
+        currentLoss = total / (2 * n);
 
         // adjust weights and bias
         biasChange /= n;
         weightChange /= n;
 
-        bias += learningRate * biasChange;
-        weight += learningRate * weightChange;
+        bias -= learningRate * biasChange;
+        weight -= learningRate * weightChange;
 
         // learning rate decay
         if (i > 0 && i % 1000 == 0) learningRate *= 0.95;
